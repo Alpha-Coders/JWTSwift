@@ -80,7 +80,18 @@ public struct JWTCustom<CustomHeaderFieldsType: CustomHeaderFields, CustomPayloa
         try container.encode(self.rawValue)
     }
 }
-
+extension JWTCustom: Hashable {
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(self.headerRaw)
+        hasher.combine(self.payloadRaw)
+        hasher.combine(self.signatureRaw)
+    }
+    public static func ==(lhs: Self, rhs: Self) -> Bool {
+        return lhs.headerRaw == rhs.headerRaw &&
+            lhs.payloadRaw == rhs.payloadRaw &&
+            lhs.signatureRaw == rhs.signatureRaw
+    }
+}
 extension JWTCustom {
     enum DecodingError: Error {
         case invalidTokenStructure
